@@ -13,22 +13,17 @@ namespace dae
 		inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
 			//todo W1 COMPLETED
-			float a{ float(pow(ray.direction.x,2) + pow(ray.direction.y,2) + pow(ray.direction.z,2)) };
-			float b{ 2 * float(ray.direction.x * (ray.origin.x - sphere.origin.x) + ray.direction.y * (ray.origin.y - sphere.origin.y) + ray.direction.z * (ray.origin.z - sphere.origin.z)) };
-			float c{ float(pow(sphere.origin.x,2) + pow(sphere.origin.y,2) + pow(sphere.origin.z,2) + pow(ray.origin.x,2) + pow(ray.origin.y,2) + pow(ray.origin.z,2)
-						- 2 * (sphere.origin.x * ray.origin.x + sphere.origin.y * ray.origin.y + sphere.origin.z * ray.origin.z) - pow(sphere.radius,2)) };
 
-			float discriminant{ b * b - 4 * a * c };
+			float dp{ float(Vector3::Dot(sphere.origin - ray.origin, ray.direction)) };
+			float tcl{ (sphere.origin - ray.origin).Magnitude() };
+			float odSquared{ float(tcl * tcl - dp * dp) };
 
 
-			if (discriminant >= 0)
+			if (odSquared <= sphere.radius * sphere.radius)
 			{
 				if (!ignoreHitRecord)
 				{
-					float dp{ float(Vector3::Dot(sphere.origin - ray.origin, ray.direction)) };
-					float tcl{ (sphere.origin - ray.origin).Magnitude() };
-					float odSquared{ float(pow(tcl, 2) - pow(dp, 2)) };
-					float tca{ float(sqrt(pow(sphere.radius,2) - odSquared)) };
+					float tca{ float(sqrt(sphere.radius * sphere.radius - odSquared)) };
 					float t0{ dp - tca };
 
 					hitRecord.didHit = true;
@@ -71,9 +66,8 @@ namespace dae
 						hitRecord.origin = ray.direction;
 
 						Vector3 intersectPoint{ ray.origin + ray.direction * d };
-
-
 						hitRecord.t = intersectPoint.Magnitude();
+
 					}
 
 					return true;

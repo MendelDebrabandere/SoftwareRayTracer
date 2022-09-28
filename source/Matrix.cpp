@@ -143,8 +143,15 @@ namespace dae {
 
 	Matrix Matrix::CreateRotation(const Vector3& r)
 	{
-		//todo W1 COMPLETED
-		return CreateRotation(r.x, r.y, r.z);
+		//todo W1 COPLETED
+		r.Normalized();
+
+		Matrix rotate{ {cosf(r.x), 0, sinf(r.y), 0},
+					   {sinf(r.x)*sinf(r.y), cosf(r.y), -sinf(r.y) * cosf(r.x), 0},
+					   {-cosf(r.y) * sinf(r.x), sinf(r.y), cosf(r.y) * cosf(r.x), 0},
+					   {0,0,0,1} };  
+		return { rotate };
+
 	}
 
 	Matrix Matrix::CreateRotation(float pitch, float yaw, float roll)
