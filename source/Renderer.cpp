@@ -27,8 +27,8 @@ void Renderer::Render(Scene* pScene) const
 	auto& materials = pScene->GetMaterials();
 	auto& lights = pScene->GetLights();
 
-	float widthOfWindow{ 2 * atanf(camera.fovAngle / 2) };
 	float aspectRatio{ float(m_Width) / m_Height };
+	float FOV{ tanf((camera.fovAngle * 180 / M_PI) / 2.f) };
 
 	for (int px{}; px < m_Width; ++px)
 	{
@@ -38,9 +38,9 @@ void Renderer::Render(Scene* pScene) const
 			////gradient += py / static_cast<float>(m_Width);
 			////gradient /= 2.0f;
 
-			Vector3 rayDirection{	-widthOfWindow / 2 + (px + 0.5f) * widthOfWindow,
-									widthOfWindow / aspectRatio / 2 + (px + 0.5f) * widthOfWindow / aspectRatio,
-									1.f};
+			Vector3 rayDirection{	(2 * (px + 0.5f) / float(m_Width) - 1) * aspectRatio * FOV,
+									(1 - 2 * (py + 0.5f) / float(m_Height)) * FOV,
+									1};
 			rayDirection.Normalize();
 
 
