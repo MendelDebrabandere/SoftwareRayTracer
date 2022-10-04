@@ -15,8 +15,8 @@ namespace dae
 			//todo W1 COMPLETED
 
 			float dp{ float(Vector3::Dot(sphere.origin - ray.origin, ray.direction)) };
-			float tcl{ (sphere.origin - ray.origin).Magnitude() };
-			float odSquared{ float(tcl * tcl - dp * dp) };
+			float tclSquared{ (sphere.origin - ray.origin).SqrMagnitude()};
+			float odSquared{ float(tclSquared - dp * dp) };
 
 
 			if (odSquared <= sphere.radius * sphere.radius)
@@ -48,35 +48,21 @@ namespace dae
 		{
 			//todo W1 COMPLETED
 
-
-			if (Vector3::Dot(ray.direction, plane.normal) == 0)
+			const float t = Vector3::Dot((plane.origin - ray.origin), plane.normal) / Vector3::Dot(ray.direction, plane.normal);
+			if (t > ray.min && t < ray.max)
 			{
-				return false;
-			}
-			else
-			{
-				float d{ Vector3::Dot(plane.origin - ray.origin, plane.normal) / Vector3::Dot(ray.direction, plane.normal) };
-
-				if (d > 0)
+				const Vector3 p = ray.origin + t * ray.direction;
+				if (t < hitRecord.t)
 				{
-					if (!ignoreHitRecord)
-					{
-						hitRecord.didHit = true;
-						hitRecord.materialIndex = plane.materialIndex;
-						hitRecord.origin = ray.direction;
-
-						Vector3 intersectPoint{ ray.origin + ray.direction * d };
-						hitRecord.t = intersectPoint.Magnitude();
-
-					}
-
+					hitRecord.didHit = true;
+					hitRecord.origin = ray.direction;
+					hitRecord.materialIndex = plane.materialIndex;
+					hitRecord.t = t;
+					hitRecord.normal = plane.normal;
 					return true;
 				}
-				else
-				{
-					return false;
-				}
 			}
+			return false;
 		}
 
 		inline bool HitTest_Plane(const Plane& plane, const Ray& ray)

@@ -120,7 +120,7 @@ namespace dae {
 	{
 		//todo W1 COMPLETED
 	
-		Matrix rotateX{ {1,0,0,0}, {0,cosf(pitch),sinf(pitch),0}, {0,-sinf(pitch),cosf(pitch),0},{0,0,0,1}};
+		Matrix rotateX{ {1,0,0,0}, {0,cosf(pitch),-sinf(pitch),0}, {0,sinf(pitch),cosf(pitch),0},{0,0,0,1}};
 
 		return { rotateX };
 	}
@@ -129,7 +129,7 @@ namespace dae {
 	{
 		//todo W1 COMPLETED
 
-		Matrix rotateY{ {cosf(yaw), 0, -sinf(yaw), 0}, {0, 1, 0, 0}, {sinf(yaw), 0, cosf(yaw), 0}, {0,0,0,1} };
+		Matrix rotateY{ {cosf(yaw), 0, sinf(yaw), 0}, {0, 1, 0, 0}, {-sinf(yaw), 0, cosf(yaw), 0}, {0,0,0,1} };
 
 		return { rotateY };
 	}
@@ -137,10 +137,10 @@ namespace dae {
 	Matrix Matrix::CreateRotationZ(float roll)
 	{
 		//todo W1 COMPLETED
-		Matrix rotateZ{ {cosf(roll), sinf(roll), 0, 0}, {-sinf(roll), cosf(roll), 0, 0}, {0, 0, 1, 0}, {0,0,0,1}};
+		Matrix rotateZ{ {cosf(roll), -sinf(roll), 0, 0}, {sinf(roll), cosf(roll), 0, 0}, {0, 0, 1, 0}, {0,0,0,1}};
 		return { rotateZ };
 	}
-
+	
 	Matrix Matrix::CreateRotation(const Vector3& r)
 	{
 		//todo W1 COPLETED

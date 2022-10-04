@@ -28,7 +28,6 @@ namespace dae {
 
 	void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
 	{
-		float closest{};
 		HitRecord tempRecord{};
 		//todo W1 COMPLETED
 		for (const Sphere& spheres : m_SphereGeometries)
@@ -167,7 +166,7 @@ namespace dae {
 		AddPlane({ 0.f, 0.f, 10.f }, { 0.f, 0.f,-1.f }, matId_Solid_Magenta);
 
 		//Spheres
-		AddSphere({ -1.75f, 1.f, 0.f }, 0.75f, matId_Solid_Red);
+		AddSphere({ -1.75f, 1.f, 0.f }, 0.75f, matId_Solid_Red); 
 		AddSphere({ 0.f, 1.f, 0.f }, 0.75f, matId_Solid_Blue);
 		AddSphere({ 1.75f, 1.f, 0.f }, 0.75f, matId_Solid_Red);
 		AddSphere({ -1.75f, 3.f, 0.f }, 0.75f, matId_Solid_Blue);

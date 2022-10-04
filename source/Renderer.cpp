@@ -28,7 +28,9 @@ void Renderer::Render(Scene* pScene) const
 	auto& lights = pScene->GetLights();
 
 	float aspectRatio{ float(m_Width) / m_Height };
-	float FOV{ tanf((camera.fovAngle * 180 / M_PI) / 2.f) };
+	float FOV{ tanf((camera.fovAngle * TO_RADIANS) / 2.f) };
+
+	const Matrix cameraToWorld{ camera.CalculateCameraToWorld() };
 
 	for (int px{}; px < m_Width; ++px)
 	{
@@ -38,17 +40,17 @@ void Renderer::Render(Scene* pScene) const
 			////gradient += py / static_cast<float>(m_Width);
 			////gradient /= 2.0f;
 
-			Vector3 rayDirection{	(2 * (px + 0.5f) / float(m_Width) - 1) * aspectRatio * FOV,
-									(1 - 2 * (py + 0.5f) / float(m_Height)) * FOV,
-									1};
+			Vector3 rayDirection{	(2 * ((px + 0.5f) / float(m_Width)) - 1) * aspectRatio * FOV,
+									(1 - 2 * ((py + 0.5f) / float(m_Height))) * FOV,
+									1 };
+
+			rayDirection = cameraToWorld.TransformVector(rayDirection);
 			rayDirection.Normalize();
-
-
 
 			//For each pixel ...
 			//... Ray direction calculations above ...
 			//Ray we are casting from the camera towards each pixel
-			Ray viewRay{ camera.origin, rayDirection};
+			Ray viewRay{ camera.origin, rayDirection };
 
 			//Color to write to the color buffer (default = black)
 			ColorRGB finalColor{};
