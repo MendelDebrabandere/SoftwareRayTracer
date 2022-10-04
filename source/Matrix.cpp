@@ -143,7 +143,7 @@ namespace dae {
 	
 	Matrix Matrix::CreateRotation(const Vector3& r)
 	{
-		//todo W1 COPLETED
+		//todo W1 COMPLETED
 		r.Normalized();
 
 		Matrix rotate{ {cosf(r.x), 0, sinf(r.y), 0},

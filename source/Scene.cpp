@@ -50,8 +50,24 @@ namespace dae {
 
 	bool Scene::DoesHit(const Ray& ray) const
 	{
-		//todo W3
-		assert(false && "No Implemented Yet!");
+		//todo W3 COMPLETED
+		
+		HitRecord tempRecord{};
+
+		for (const Sphere& spheres : m_SphereGeometries)
+		{
+			if (dae::GeometryUtils::HitTest_Sphere(spheres, ray, tempRecord, true))
+			{
+				return true;
+			}
+		}
+		for (const Plane& planes : m_PlaneGeometries)
+		{
+			if (dae::GeometryUtils::HitTest_Plane(planes, ray, tempRecord, true))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 

@@ -64,7 +64,25 @@ void Renderer::Render(Scene* pScene) const
 			{
 				//If we hit something, set finalColor to materialColor, else keep black
 				//Use HitRecord::materialIndex to find the corresponding material
-				finalColor = materials[closestHit.materialIndex]->Shade();
+				for (const Light& light : lights)
+				{
+					float offSet{ 0.01f };
+
+					Vector3 direction{ light.origin - closestHit.origin };
+					Ray ray{};
+					ray.origin = closestHit.origin;
+					ray.direction = direction.Normalized();
+					ray.min = offSet;
+					ray.max = direction.Magnitude() - offSet;
+					if (pScene->DoesHit(ray))
+					{
+						finalColor = materials[closestHit.materialIndex]->Shade() / 2;
+					}
+					else
+					{
+						finalColor = materials[closestHit.materialIndex]->Shade();
+					}
+				}
 			}
 
 

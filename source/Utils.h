@@ -14,21 +14,25 @@ namespace dae
 		{
 			//todo W1 COMPLETED
 
-			float dp{ float(Vector3::Dot(sphere.origin - ray.origin, ray.direction)) };
-			float tclSquared{ (sphere.origin - ray.origin).SqrMagnitude()};
-			float odSquared{ float(tclSquared - dp * dp) };
+			const float dp{ float(Vector3::Dot(sphere.origin - ray.origin, ray.direction)) };
+			const float tclSquared{ (sphere.origin - ray.origin).SqrMagnitude()};
+			const float odSquared{ float(tclSquared - dp * dp) };
 
 
 			if (odSquared <= sphere.radius * sphere.radius)
 			{
+				const float tca{ float(sqrt(sphere.radius * sphere.radius - odSquared)) };
+				const float t0{ dp - tca };
+
+				if (t0 < 0)
+					return false;
+
 				if (!ignoreHitRecord)
 				{
-					float tca{ float(sqrt(sphere.radius * sphere.radius - odSquared)) };
-					float t0{ dp - tca };
-
+					hitRecord.normal = -ray.direction;
 					hitRecord.didHit = true;
 					hitRecord.materialIndex = sphere.materialIndex;
-					hitRecord.origin = ray.direction;
+					hitRecord.origin = ray.origin + ray.direction * t0;
 					hitRecord.t = t0;
 				}
 				return true;
@@ -54,11 +58,14 @@ namespace dae
 				const Vector3 p = ray.origin + t * ray.direction;
 				if (t < hitRecord.t)
 				{
-					hitRecord.didHit = true;
-					hitRecord.origin = ray.direction;
-					hitRecord.materialIndex = plane.materialIndex;
-					hitRecord.t = t;
-					hitRecord.normal = plane.normal;
+					if (!ignoreHitRecord)
+					{
+						hitRecord.didHit = true;
+						hitRecord.origin = ray.origin + ray.direction * t;
+						hitRecord.materialIndex = plane.materialIndex;
+						hitRecord.t = t;
+						hitRecord.normal = -ray.direction;
+					}
 					return true;
 				}
 			}
