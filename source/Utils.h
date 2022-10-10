@@ -24,15 +24,15 @@ namespace dae
 				const float tca{ float(sqrt(sphere.radius * sphere.radius - odSquared)) };
 				const float t0{ dp - tca };
 
-				if (t0 < 0)
+				if (!(t0 > ray.min && t0 < ray.max))
 					return false;
 
 				if (!ignoreHitRecord)
 				{
-					hitRecord.normal = -ray.direction;
+					hitRecord.origin = ray.origin + ray.direction * t0;
+					hitRecord.normal = Vector3{ hitRecord.origin - sphere.origin } / sphere.radius;
 					hitRecord.didHit = true;
 					hitRecord.materialIndex = sphere.materialIndex;
-					hitRecord.origin = ray.origin + ray.direction * t0;
 					hitRecord.t = t0;
 				}
 				return true;
@@ -64,7 +64,7 @@ namespace dae
 						hitRecord.origin = ray.origin + ray.direction * t;
 						hitRecord.materialIndex = plane.materialIndex;
 						hitRecord.t = t;
-						hitRecord.normal = -ray.direction;
+						hitRecord.normal = plane.normal;
 					}
 					return true;
 				}
@@ -122,8 +122,9 @@ namespace dae
 		inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
 		{
 			//todo W3
-			assert(false && "No Implemented Yet!");
-			return {};
+			float rSquared{ (light.origin - target).SqrMagnitude() };
+		
+			return (light.color * ColorRGB{ 1/rSquared,1/rSquared,1/rSquared });
 		}
 	}
 

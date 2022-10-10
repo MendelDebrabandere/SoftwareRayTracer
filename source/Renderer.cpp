@@ -62,26 +62,78 @@ void Renderer::Render(Scene* pScene) const
 
 			if (closestHit.didHit)
 			{
-				//If we hit something, set finalColor to materialColor, else keep black
-				//Use HitRecord::materialIndex to find the corresponding material
+
+				//finalColor = materials[closestHit.materialIndex]->Shade();
+
+				bool ObservedArea{ false };
+				bool Radiance{ false };
+				bool BRDF{ false };
+
+				switch (m_CurrentLightingMode)
+				{
+				case LightingMode::ObservedArea:
+					ObservedArea = true;
+					break;
+				case LightingMode::Radiance:
+					Radiance = true;
+					break;
+				case LightingMode::BRDF:
+					BRDF = true;
+					break;
+				case LightingMode::Combined:
+					ObservedArea = true;
+					Radiance = true;
+					BRDF = true;
+					break;
+				}
+
+
 				for (const Light& light : lights)
 				{
+					ColorRGB tempCycleColor{colors::White};
+
+					Vector3 direction{ closestHit.origin - light.origin };
+					float directionMagnitude{ direction.Magnitude() };
+
+					if (ObservedArea)
+					{
+						float dotProd{ Vector3::Dot(closestHit.normal, direction / directionMagnitude) };
+						dotProd = abs(dotProd) / 1.5f;
+						tempCycleColor *= ColorRGB{ dotProd, dotProd, dotProd };
+					}
+					if (Radiance)
+					{
+						tempCycleColor *= LightUtils::GetRadiance(light, closestHit.origin) * 50;
+					}
+
+
+
+
+
 					float offSet{ 0.01f };
 
-					Vector3 direction{ light.origin - closestHit.origin };
 					Ray ray{};
-					ray.origin = closestHit.origin;
-					ray.direction = direction.Normalized();
+					ray.origin = light.origin;
+					ray.direction = direction / directionMagnitude;
 					ray.min = offSet;
-					ray.max = direction.Magnitude() - offSet;
+					ray.max = directionMagnitude - offSet;
+
 					if (pScene->DoesHit(ray))
 					{
-						finalColor = materials[closestHit.materialIndex]->Shade() / 2;
+						if (m_ShadowsEnabled)
+						{
+							tempCycleColor /= 2;
+						}
+
+						direction = Vector3{ 0,0,0 };
 					}
-					else
+
+					if (BRDF)
 					{
-						finalColor = materials[closestHit.materialIndex]->Shade();
+						tempCycleColor *= materials[closestHit.materialIndex]->Shade(closestHit, direction / directionMagnitude, -rayDirection);
 					}
+
+					finalColor += tempCycleColor;
 				}
 			}
 
@@ -104,4 +156,23 @@ void Renderer::Render(Scene* pScene) const
 bool Renderer::SaveBufferToImage() const
 {
 	return SDL_SaveBMP(m_pBuffer, "RayTracing_Buffer.bmp");
+}
+
+void dae::Renderer::CycleLightingMode()
+{
+	switch (m_CurrentLightingMode)
+	{
+	case LightingMode::ObservedArea:
+		m_CurrentLightingMode = LightingMode::Radiance;
+		break;
+	case LightingMode::Radiance:
+		m_CurrentLightingMode = LightingMode::BRDF;
+		break;
+	case LightingMode::BRDF:
+		m_CurrentLightingMode = LightingMode::Combined;
+		break;
+	case LightingMode::Combined:
+		m_CurrentLightingMode = LightingMode::ObservedArea;
+		break;
+	}
 }
