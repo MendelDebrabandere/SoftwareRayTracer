@@ -119,8 +119,15 @@ namespace dae
 
 			ColorRGB Frgb{ BRDF::FresnelFunction_Schlick(halfVector, v, f0)};
 
+			float Dnfloat{ BRDF::NormalDistribution_GGX(hitRecord.normal, halfVector, m_Roughness) };
+			ColorRGB DnRGB{ Dnfloat ,Dnfloat ,Dnfloat };
+			
+			float Gsmith{ BRDF::GeometryFunction_Smith(hitRecord.normal, v, l, m_Roughness) };
+			ColorRGB GsmithRGB{ Gsmith ,Gsmith ,Gsmith };
 
-			return Frgb;
+			return GsmithRGB;
+
+			//  / (4 * Vector3::Dot(v, hitRecord.normal) * Vector3::Dot(l, hitRecord.normal))
 		}
 
 	private:

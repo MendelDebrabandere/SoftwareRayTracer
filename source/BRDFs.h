@@ -64,8 +64,10 @@ namespace dae
 		 */
 		static float NormalDistribution_GGX(const Vector3& n, const Vector3& h, float roughness)
 		{
-			//todo: W3
-			return {};
+			//todo: W3 COMPLETED
+			float a{ roughness * roughness };
+			float Dnfloat{ float((a * a) / (M_PI * pow(std::max(Vector3::Dot(n, h),0.f) * std::max(Vector3::Dot(n, h),0.f) * (a * a - 1) + 1,2))) };
+			return Dnfloat;
 		}
 
 
@@ -78,8 +80,11 @@ namespace dae
 		 */
 		static float GeometryFunction_SchlickGGX(const Vector3& n, const Vector3& v, float roughness)
 		{
-			//todo: W3
-			return {};
+			//todo: W3 COPLETED
+			float a{ roughness * roughness };
+			float k{ (a + 1) * (a + 1) / 8 };
+			float Gfloat{ std::max(Vector3::Dot(n, v), 0.f) / (std::max(Vector3::Dot(n, v), 0.f) * (1 - k) + k) };
+			return Gfloat;
 		}
 
 		/**
@@ -92,8 +97,9 @@ namespace dae
 		 */
 		static float GeometryFunction_Smith(const Vector3& n, const Vector3& v, const Vector3& l, float roughness)
 		{
-			//todo: W3
-			return {};
+			//todo: W3 COMPLETED
+			float Gsmith{ BRDF::GeometryFunction_SchlickGGX(n, v, roughness) * BRDF::GeometryFunction_SchlickGGX(n, l, roughness) };
+			return Gsmith;
 		}
 
 	}
