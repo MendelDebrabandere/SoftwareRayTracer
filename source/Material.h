@@ -117,17 +117,23 @@ namespace dae
 
 			Vector3 halfVector{ (v + l).Normalized() };
 
-			ColorRGB Frgb{ BRDF::FresnelFunction_Schlick(halfVector, v, f0)};
+			ColorRGB Frgb{ BRDF::FresnelFunction_Schlick(halfVector, v, f0) };
 
 			float Dnfloat{ BRDF::NormalDistribution_GGX(hitRecord.normal, halfVector, m_Roughness) };
 			ColorRGB DnRGB{ Dnfloat ,Dnfloat ,Dnfloat };
-			
+
 			float Gsmith{ BRDF::GeometryFunction_Smith(hitRecord.normal, v, l, m_Roughness) };
 			ColorRGB GsmithRGB{ Gsmith ,Gsmith ,Gsmith };
 
-			return GsmithRGB;
-
-			//  / (4 * Vector3::Dot(v, hitRecord.normal) * Vector3::Dot(l, hitRecord.normal))
+			ColorRGB cookTorranceSpecular{ (Frgb * DnRGB * GsmithRGB) / (4 * Vector3::Dot(v, hitRecord.normal) * Vector3::Dot(l, hitRecord.normal)) };
+			
+			ColorRGB kd{};
+			if (m_Metalness == 0.f)
+				kd = ColorRGB{ 1,1,1 } - Frgb;
+			ColorRGB cookTorranceDiffuse{ BRDF::Lambert(kd, m_Albedo) };
+			
+			
+			return cookTorranceSpecular + cookTorranceDiffuse;
 		}
 
 	private:
