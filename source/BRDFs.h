@@ -34,9 +34,9 @@ namespace dae
 		 */
 		static ColorRGB Phong(float ks, float exp, const Vector3& l, const Vector3& v, const Vector3& n)
 		{
-			//todo: W3
+			//todo: W3 COMPLETED
 			Vector3 r{ l - 2 * Vector3::Dot(n , l) * n };
-			float color{ abs(ks * pow(Vector3::Dot(r, v), exp)) };
+			float color{ abs(ks * powf(Vector3::Dot(r, v), exp)) };
 			ColorRGB RGBcolor{ color,color,color };
 			return RGBcolor;
 		}
@@ -50,8 +50,9 @@ namespace dae
 		 */
 		static ColorRGB FresnelFunction_Schlick(const Vector3& h, const Vector3& v, const ColorRGB& f0)
 		{
-			//todo: W3
-			return {};
+			//todo: W3 COMPLETED
+			ColorRGB Frgb{ f0 + (ColorRGB{1,1,1} - f0) * powf(1 - std::max(Vector3::Dot(h, v), 0.f), 5) };
+			return Frgb;
 		}
 
 		/**

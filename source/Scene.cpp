@@ -216,18 +216,18 @@ namespace dae {
 		AddPlane(Vector3{ 5.f, 0.f, 0.f }, Vector3{ -1.f, 0.f, 0.f }, matLambert_GrayBlue); //RIGHT
 		AddPlane(Vector3{ -5.f, 0.f, 0.f }, Vector3{ 1.f, 0.f, 0.f }, matLambert_GrayBlue); //LEFT
 
-		//Temporary Lambert-Phong Spheres & Materials
-		const auto matLambertPhong1 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 3.f));
-		const auto matLambertPhong2 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 15.f));
-		const auto matLambertPhong3 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 50.f));
-		AddSphere(Vector3{ -1.75f, 1.f, 0.f }, 0.75f, matLambertPhong1);
-		AddSphere(Vector3{ 0.f, 1.f, 0.f }, 0.75f, matLambertPhong2);
-		AddSphere(Vector3{ 1.75f, 1.f, 0.f }, 0.75f, matLambertPhong3);
+		////Temporary Lambert-Phong Spheres & Materials
+		//const auto matLambertPhong1 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 3.f));
+		//const auto matLambertPhong2 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 15.f));
+		//const auto matLambertPhong3 = AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 50.f));
+		//AddSphere(Vector3{ -1.75f, 1.f, 0.f }, 0.75f, matLambertPhong1);
+		//AddSphere(Vector3{ 0.f, 1.f, 0.f }, 0.75f, matLambertPhong2);
+		//AddSphere(Vector3{ 1.75f, 1.f, 0.f }, 0.75f, matLambertPhong3);
 
 		//Spheres
-		//AddSphere(Vector3{ -1.75f, 1.f, 0.f }, 0.75f, matCT_GrayRoughMetal);
-		//AddSphere(Vector3{ 0.f, 1.f, 0.f }, 0.75f, matCT_GrayMediumMetal);
-		//AddSphere(Vector3{ 1.75f, 1.f, 0.f }, 0.75f, matCT_GraySmoothMetal);
+		AddSphere(Vector3{ -1.75f, 1.f, 0.f }, 0.75f, matCT_GrayRoughMetal);
+		AddSphere(Vector3{ 0.f, 1.f, 0.f }, 0.75f, matCT_GrayMediumMetal);
+		AddSphere(Vector3{ 1.75f, 1.f, 0.f }, 0.75f, matCT_GraySmoothMetal);
 		AddSphere(Vector3{ -1.75f, 3.f, 0.f }, 0.75f, matCT_GrayRoughPlastic);
 		AddSphere(Vector3{ 0.f, 3.f, 0.f }, 0.75f, matCT_GrayMediumPlastic);
 		AddSphere(Vector3{ 1.75f, 3.f, 0.f }, 0.75f, matCT_GraySmoothPlastic);

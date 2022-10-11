@@ -65,6 +65,10 @@ namespace dae
 						hitRecord.materialIndex = plane.materialIndex;
 						hitRecord.t = t;
 						hitRecord.normal = plane.normal;
+						if (Vector3::Dot(plane.normal, ray.direction) > 0)
+						{
+							hitRecord.normal = -plane.normal;
+						}
 					}
 					return true;
 				}
@@ -121,12 +125,12 @@ namespace dae
 
 		inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
 		{
-			//todo W3
+			//todo W3 COMPLETED
 			float rSquared{ (light.origin - target).SqrMagnitude() };
 		
-			return (light.color * ColorRGB{ 1/rSquared,1/rSquared,1/rSquared });
+			return (light.color * ColorRGB{ light.intensity/rSquared, light.intensity /rSquared, light.intensity /rSquared });
 		}
-	}
+	}	
 
 	namespace Utils
 	{

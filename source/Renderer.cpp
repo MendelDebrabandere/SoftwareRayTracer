@@ -92,21 +92,21 @@ void Renderer::Render(Scene* pScene) const
 				{
 					ColorRGB tempCycleColor{colors::White};
 
-					Vector3 direction{ closestHit.origin - light.origin };
-					float directionMagnitude{ direction.Magnitude() };
+					Vector3 lightDirection{ -closestHit.origin + light.origin };
+					float directionMagnitude{ lightDirection.Magnitude() };
+					lightDirection = lightDirection / directionMagnitude;
 
 					if (ObservedArea)
 					{
-						float dotProd{ Vector3::Dot(closestHit.normal, direction / directionMagnitude) };
-						dotProd = abs(dotProd) / 1.5f;
+						float dotProd{ Vector3::Dot(closestHit.normal, lightDirection) };
+						if (dotProd < 0.f)
+							continue;
 						tempCycleColor *= ColorRGB{ dotProd, dotProd, dotProd };
 					}
 					if (Radiance)
 					{
-						tempCycleColor *= LightUtils::GetRadiance(light, closestHit.origin) * 50;
+						tempCycleColor *= LightUtils::GetRadiance(light, closestHit.origin);
 					}
-
-
 
 
 
@@ -114,24 +114,22 @@ void Renderer::Render(Scene* pScene) const
 
 					Ray ray{};
 					ray.origin = light.origin;
-					ray.direction = direction / directionMagnitude;
+					ray.direction = -lightDirection;
 					ray.min = offSet;
 					ray.max = directionMagnitude - offSet;
 
-					if (pScene->DoesHit(ray))
+					if (m_ShadowsEnabled && pScene->DoesHit(ray))
 					{
-						if (m_ShadowsEnabled)
-						{
-							tempCycleColor /= 2;
-						}
-
-						direction = Vector3{ 0,0,0 };
+						continue;
 					}
+
+
 
 					if (BRDF)
 					{
-						tempCycleColor *= materials[closestHit.materialIndex]->Shade(closestHit, direction / directionMagnitude, -rayDirection);
+						tempCycleColor *= materials[closestHit.materialIndex]->Shade(closestHit, lightDirection, -rayDirection);
 					}
+
 
 					finalColor += tempCycleColor;
 				}
