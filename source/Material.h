@@ -108,7 +108,7 @@ namespace dae
 
 		ColorRGB Shade(const HitRecord& hitRecord = {}, const Vector3& l = {}, const Vector3& v = {}) override
 		{
-			//todo: W3
+			//todo: W3 COMPLETED
 			ColorRGB f0{};
 			if (m_Metalness == 0.f)
 				f0 = ColorRGB{ 0.04f,0.04f,0.04f };
@@ -131,7 +131,6 @@ namespace dae
 			if (m_Metalness == 0.f)
 				kd = ColorRGB{ 1,1,1 } - Frgb;
 			ColorRGB cookTorranceDiffuse{ BRDF::Lambert(kd, m_Albedo) };
-			
 			
 			return cookTorranceSpecular + cookTorranceDiffuse;
 		}

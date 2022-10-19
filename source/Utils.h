@@ -86,9 +86,79 @@ namespace dae
 		//TRIANGLE HIT-TESTS
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//todo W5
-			assert(false && "No Implemented Yet!");
-			return false;
+			//todo W5 BUSY
+
+			// Normal VS Ray-Direction Check (Perpendicular?)
+			Vector3 a = triangle.v1 - triangle.v0;
+			Vector3	b = triangle.v2 - triangle.v0;
+			Vector3	normal = Vector3::Cross(a, b);
+
+			if (Vector3::Dot(normal, ray.direction) == 0)
+			{
+				return false;
+			}
+
+			// CullModeCheck
+			TriangleCullMode cullMode{ triangle.cullMode };
+			if (cullMode != TriangleCullMode::NoCulling)
+			{
+				if (ignoreHitRecord)
+				{
+					if (cullMode == TriangleCullMode::BackFaceCulling)
+						cullMode = TriangleCullMode::FrontFaceCulling;
+					else if (cullMode == TriangleCullMode::FrontFaceCulling)
+						cullMode = TriangleCullMode::BackFaceCulling;
+				}
+
+				if (Vector3::Dot(normal, ray.direction) > 0)
+				{
+					if (cullMode == TriangleCullMode::BackFaceCulling)
+						return false;
+				}
+				else if (Vector3::Dot(normal, ray.direction) < 0)
+				{
+					if (cullMode == TriangleCullMode::FrontFaceCulling)
+						return false;
+				}
+			}
+
+			// Ray-Plane test(planedefinedbyTriangle) + T range check
+			Plane plane{ triangle.v0, normal };
+			HitRecord tempHitRecord{};
+			HitTest_Plane(plane, ray, tempHitRecord);
+
+			if (tempHitRecord.t > ray.max || tempHitRecord.t < ray.min)
+				return false;
+
+			// CheckifhitpointisinsidetheTriangle
+			Vector3 point{ tempHitRecord.origin };
+
+			Vector3 edgeA{ (triangle.v1 - triangle.v0) };
+			Vector3	pointToSideA{ point - triangle.v0 };
+			if (Vector3::Dot(normal, Vector3::Cross(edgeA, pointToSideA)) < 0)
+				return false;
+
+			Vector3 edgeB{ (triangle.v2 - triangle.v1) };
+			Vector3	pointToSideB{ point - triangle.v1 };
+			if (Vector3::Dot(normal, Vector3::Cross(edgeB, pointToSideB)) < 0)
+				return false;
+
+			Vector3 edgeC{ (triangle.v0 - triangle.v2) };
+			Vector3	pointToSideC{ point - triangle.v2 };
+			if (Vector3::Dot(normal, Vector3::Cross(edgeC, pointToSideC)) < 0)
+				return false;
+
+
+			// Fill-in HitRecord(if required)
+			if (!ignoreHitRecord)
+			{
+				hitRecord.didHit = true;
+				hitRecord.materialIndex = triangle.materialIndex;
+				hitRecord.normal = normal;
+				hitRecord.origin = point;
+				hitRecord.t = tempHitRecord.t;
+			}
+			return true;
 		}
 
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
@@ -118,7 +188,7 @@ namespace dae
 		//Direction from target to light
 		inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
 		{
-			//todo W3
+			//todo W3 (NOT USED)
 			assert(false && "No Implemented Yet!");
 			return {};
 		}
@@ -126,6 +196,8 @@ namespace dae
 		inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
 		{
 			//todo W3 COMPLETED
+
+			
 			float rSquared{ (light.origin - target).SqrMagnitude() };
 		
 			return (light.color * ColorRGB{ light.intensity/rSquared, light.intensity /rSquared, light.intensity /rSquared });

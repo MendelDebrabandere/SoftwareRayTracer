@@ -51,6 +51,9 @@ namespace dae
 		std::vector<Light> m_Lights{};
 		std::vector<Material*> m_Materials{};
 
+		//Temp (individual Triangle Testing)
+		std::vector<Triangle> m_Triangles{};
+
 		Camera m_Camera{};
 
 		Sphere* AddSphere(const Vector3& origin, float radius, unsigned char materialIndex = 0);
@@ -106,6 +109,22 @@ namespace dae
 		Scene_W3(Scene_W3&&) noexcept = delete;
 		Scene_W3& operator=(const Scene_W3&) = delete;
 		Scene_W3& operator=(Scene_W3&&) noexcept = delete;
+
+		void Initialize() override;
+	};
+
+	//+++++++++++++++++++++++++++++++++++++++++
+	//WEEK 4 Test Scene
+	class Scene_W4 final : public Scene
+	{
+	public:
+		Scene_W4() = default;
+		~Scene_W4() override = default;
+
+		Scene_W4(const Scene_W4&) = delete;
+		Scene_W4(Scene_W4&&) noexcept = delete;
+		Scene_W4& operator=(const Scene_W4&) = delete;
+		Scene_W4& operator=(Scene_W4&&) noexcept = delete;
 
 		void Initialize() override;
 	};
