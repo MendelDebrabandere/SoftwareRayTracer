@@ -36,10 +36,6 @@ void Renderer::Render(Scene* pScene) const
 	{
 		for (int py{}; py < m_Height; ++py)
 		{
-			////float gradient = px / static_cast<float>(m_Width);
-			////gradient += py / static_cast<float>(m_Width);
-			////gradient /= 2.0f;
-
 			Vector3 rayDirection{	(2 * ((px + 0.5f) / float(m_Width)) - 1) * aspectRatio * FOV,
 									(1 - 2 * ((py + 0.5f) / float(m_Height))) * FOV,
 									1 };
@@ -59,7 +55,7 @@ void Renderer::Render(Scene* pScene) const
 			HitRecord closestHit{};
 			pScene->GetClosestHit(viewRay, closestHit);
 
-
+			
 			if (closestHit.didHit)
 			{
 

@@ -14,13 +14,13 @@ namespace dae
 		static ColorRGB Lambert(float kd, const ColorRGB& cd)
 		{
 			//todo: W3 COMPLETED
-			return cd * kd / M_PI;
+			return cd * kd / float(M_PI);
 		}
 
 		static ColorRGB Lambert(const ColorRGB& kd, const ColorRGB& cd)
 		{
 			//todo: W3 COMPLETED
-			return cd * kd / M_PI;
+			return cd * kd / float(M_PI);
 		}
 
 		/**
@@ -66,7 +66,7 @@ namespace dae
 		{
 			//todo: W3 COMPLETED
 			float a{ roughness * roughness };
-			float Dnfloat{ float((a * a) / (M_PI * pow(std::max(Vector3::Dot(n, h),0.f) * std::max(Vector3::Dot(n, h),0.f) * (a * a - 1) + 1,2))) };
+			float Dnfloat{ float((a * a) / (float(M_PI) * pow(std::max(Vector3::Dot(n, h),0.f) * std::max(Vector3::Dot(n, h),0.f) * (a * a - 1) + 1,2))) };
 			return Dnfloat;
 		}
 

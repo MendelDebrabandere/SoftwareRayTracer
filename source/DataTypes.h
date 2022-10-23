@@ -123,12 +123,60 @@ namespace dae
 
 		void CalculateNormals()
 		{
-			assert(false && "No Implemented Yet!");
+			//todo: W5 COMPLETED
+			for (int idx{}; idx < indices.size(); idx += 3)
+			{
+				const int idx1{ idx };
+				const int idx2{ idx + 1 };
+				const int idx3{ idx + 2 };
+
+				const Vector3 a = positions[indices[idx2]] - positions[indices[idx1]];
+				const Vector3 b = positions[indices[idx3]] - positions[indices[idx1]];
+
+				Vector3	normal = Vector3::Cross(a, b);
+
+				normal.Normalize();
+
+				normals.push_back(normal);
+				normals.shrink_to_fit();
+			}
 		}
 
 		void UpdateTransforms()
 		{
-			assert(false && "No Implemented Yet!");
+			//todo: W5 COMPLETED
+			transformedPositions.clear();
+			transformedPositions.reserve(positions.size());
+			transformedNormals.clear();
+			transformedNormals.reserve(normals.size());
+
+
+			//Matrix TRSMatrix{ translationTransform };
+			//TRSMatrix *= rotationTransform;
+			//TRSMatrix *= scaleTransform;
+
+
+			for (Vector3 position : positions)
+			{
+				position = scaleTransform.TransformPoint(position);
+				position = rotationTransform.TransformPoint(position);
+				position = translationTransform.TransformPoint(position);
+				//position = TRSMatrix.TransformPoint(position);
+				
+				transformedPositions.emplace_back(position);
+				//transformedPositions.emplace_back(TRSMatrix.TransformPoint(position));
+			}
+			for (Vector3 normal : normals)
+			{
+				normal = scaleTransform.TransformVector(normal);
+				normal = rotationTransform.TransformVector(normal);
+				normal = translationTransform.TransformVector(normal);
+				//normal = TRSMatrix.TransformVector(normal);
+
+				transformedNormals.emplace_back(normal);
+				//transformedNormals.emplace_back(TRSMatrix.TransformVector(normal));
+			}
+
 			//Calculate Final Transform 
 			//const auto finalTransform = ...
 

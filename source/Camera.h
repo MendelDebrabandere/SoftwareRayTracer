@@ -93,15 +93,15 @@ namespace dae
 			{
 				totalPitch -= rotationSpeed * mouseX;
 				totalYaw -= rotationSpeed * mouseY;
-				if (abs(totalYaw) >= M_PI / 2.f)
+				if (abs(totalYaw) >= float(M_PI) / 2.f)
 				{
 					if (totalYaw < 0)
 					{
-						totalYaw = -M_PI / 2.001f;
+						totalYaw = -float(M_PI) / 2.001f;
 					}
 					else
 					{
-						totalYaw = M_PI / 2.001f;
+						totalYaw = float(M_PI) / 2.001f;
 					}
 				}
 			}

@@ -106,7 +106,7 @@ namespace dae {
 	{
 		//todo W1 COMPLETED
 		
-		Matrix transform{ {1,0,0,x}, {0,1,0,y}, {0,0,1,z},{0,0,0,1 } };
+		Matrix transform{ {1,0,0,0}, {0,1,0,0}, {0,0,1,0},{x,y,z,1 } };
 
 		return { transform };
 	}
@@ -119,8 +119,16 @@ namespace dae {
 	Matrix Matrix::CreateRotationX(float pitch)
 	{
 		//todo W1 COMPLETED
-	
-		Matrix rotateX{ {1,0,0,0}, {0,cosf(pitch),-sinf(pitch),0}, {0,sinf(pitch),cosf(pitch),0},{0,0,0,1}};
+		//pitch *= TO_RADIANS;
+
+		//Matrix rotateX{ {1,0,0,0},
+		//				{0,cosf(pitch),-sinf(pitch),0},
+		//				{0,sinf(pitch),cosf(pitch),0},
+		//				{0,0,0,1}};
+		Matrix rotateX{ {1,0,0,0},
+						{0,cosf(pitch),sinf(pitch),0},
+						{0,-sinf(pitch),cosf(pitch),0},
+						{0,0,0,1}};
 
 		return { rotateX };
 	}
@@ -128,8 +136,16 @@ namespace dae {
 	Matrix Matrix::CreateRotationY(float yaw)
 	{
 		//todo W1 COMPLETED
+		//yaw *= TO_RADIANS;
 
-		Matrix rotateY{ {cosf(yaw), 0, sinf(yaw), 0}, {0, 1, 0, 0}, {-sinf(yaw), 0, cosf(yaw), 0}, {0,0,0,1} };
+		//Matrix rotateY{ {cosf(yaw), 0, sinf(yaw), 0},
+		//				{0, 1, 0, 0},
+		//				{-sinf(yaw), 0, cosf(yaw), 0},
+		//				{0,0,0,1} };
+		Matrix rotateY{ {cosf(yaw), 0, -sinf(yaw), 0},
+						{0, 1, 0, 0},
+						{sinf(yaw), 0, cosf(yaw), 0},
+						{0,0,0,1} };
 
 		return { rotateY };
 	}
@@ -137,7 +153,17 @@ namespace dae {
 	Matrix Matrix::CreateRotationZ(float roll)
 	{
 		//todo W1 COMPLETED
-		Matrix rotateZ{ {cosf(roll), -sinf(roll), 0, 0}, {sinf(roll), cosf(roll), 0, 0}, {0, 0, 1, 0}, {0,0,0,1}};
+		//roll *= TO_RADIANS;
+
+		//Matrix rotateZ{ {cosf(roll), -sinf(roll), 0, 0},
+		//				{sinf(roll), cosf(roll), 0, 0},
+		//				{0, 0, 1, 0},
+		//				{0,0,0,1}};
+		Matrix rotateZ{ {cosf(roll), sinf(roll), 0, 0},
+						{-sinf(roll), cosf(roll), 0, 0},
+						{0, 0, 1, 0},
+						{0,0,0,1} };
+
 		return { rotateZ };
 	}
 	
@@ -203,13 +229,18 @@ namespace dae {
 	const Matrix& Matrix::operator*=(const Matrix& m)
 	{
 		Matrix copy{ *this };
-		Matrix m_transposed = Transpose(m);
 
 		for (int r{ 0 }; r < 4; ++r)
 		{
 			for (int c{ 0 }; c < 4; ++c)
 			{
-				data[r][c] = Vector4::Dot(copy[r], m_transposed[c]);
+				//data[r][c] = Vector4::Dot(copy[r], m_transposed[c]);
+				int sum = 0;
+				for (int k{}; k < 4; ++k)
+				{
+					sum += copy[r][k] * m[k][c];
+				}
+				data[r][c] = sum;
 			}
 		}
 

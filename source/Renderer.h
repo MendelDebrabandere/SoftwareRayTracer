@@ -36,7 +36,7 @@ namespace dae
 		};
 
 		LightingMode m_CurrentLightingMode{ LightingMode::Combined };
-		bool m_ShadowsEnabled{ false };
+		bool m_ShadowsEnabled{ true };
 
 		SDL_Window* m_pWindow{};
 

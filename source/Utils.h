@@ -86,12 +86,10 @@ namespace dae
 		//TRIANGLE HIT-TESTS
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//todo W5 BUSY
+			//todo W5 FINISHED
 
 			// Normal VS Ray-Direction Check (Perpendicular?)
-			Vector3 a = triangle.v1 - triangle.v0;
-			Vector3	b = triangle.v2 - triangle.v0;
-			Vector3	normal = Vector3::Cross(a, b);
+			const Vector3 normal = triangle.normal;
 
 			if (Vector3::Dot(normal, ray.direction) == 0)
 			{
@@ -102,13 +100,13 @@ namespace dae
 			TriangleCullMode cullMode{ triangle.cullMode };
 			if (cullMode != TriangleCullMode::NoCulling)
 			{
-				if (ignoreHitRecord)
-				{
-					if (cullMode == TriangleCullMode::BackFaceCulling)
-						cullMode = TriangleCullMode::FrontFaceCulling;
-					else if (cullMode == TriangleCullMode::FrontFaceCulling)
-						cullMode = TriangleCullMode::BackFaceCulling;
-				}
+				//if (ignoreHitRecord)
+				//{
+				//	if (cullMode == TriangleCullMode::BackFaceCulling)
+				//		cullMode = TriangleCullMode::FrontFaceCulling;
+				//	else if (cullMode == TriangleCullMode::FrontFaceCulling)
+				//		cullMode = TriangleCullMode::BackFaceCulling;
+				//}
 
 				if (Vector3::Dot(normal, ray.direction) > 0)
 				{
@@ -131,7 +129,7 @@ namespace dae
 				return false;
 
 			// CheckifhitpointisinsidetheTriangle
-			Vector3 point{ tempHitRecord.origin };
+			const Vector3 point{ tempHitRecord.origin };
 
 			Vector3 edgeA{ (triangle.v1 - triangle.v0) };
 			Vector3	pointToSideA{ point - triangle.v0 };
@@ -159,6 +157,76 @@ namespace dae
 				hitRecord.t = tempHitRecord.t;
 			}
 			return true;
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//// Calculate the dot product with the triangle normal and the view direction
+			//const float viewNormalDot{ Vector3::Dot(ray.direction, triangle.normal) };
+
+			//// If the camera looks perpendicular on the normal, the triangle is not visible
+			//if (abs(viewNormalDot) < FLT_EPSILON) return false;
+
+			//// Get the correct current cullmode (the cullmode needs to be flipped for shadow rays)
+			//TriangleCullMode curCullMode{ triangle.cullMode };
+			//if (ignoreHitRecord)
+			//{
+			//	switch (curCullMode)
+			//	{
+			//	case dae::TriangleCullMode::FrontFaceCulling:
+			//		curCullMode = TriangleCullMode::BackFaceCulling;
+			//		break;
+			//	case dae::TriangleCullMode::BackFaceCulling:
+			//		curCullMode = TriangleCullMode::FrontFaceCulling;
+			//		break;
+			//	}
+			//}
+
+			//// When the camera looks to the culled side of a triangle, return false
+			//switch (curCullMode)
+			//{
+			//case dae::TriangleCullMode::FrontFaceCulling:
+			//	if (viewNormalDot < 0) return false;
+			//	break;
+			//case dae::TriangleCullMode::BackFaceCulling:
+			//	if (viewNormalDot > 0) return false;
+			//	break;
+			//}
+
+			//// Calculate the center of the triangle
+			//Vector3 center{ (triangle.v0 + triangle.v1 + triangle.v2) / 3.0f };
+
+			//// Calculate a vector from the camera to the triangle
+			//const Vector3 planeRayDistance{ center - ray.origin };
+
+			//// Calculate the distance from ray hit
+			//const float t = Vector3::Dot(planeRayDistance, triangle.normal) / viewNormalDot;
+
+			//// If the distance is less then zero; the triangle is not visible
+			//if (t < ray.min || t > ray.max)
+			//{
+			//	return false;
+			//}
+
+			//// Calculate the hit point on the triangle
+			//Vector3 hitPoint{ ray.origin + ray.direction * t };
+
+			//// Make sure that the hit point is inside the triangle by checking its location compared to the edges
+			////		If point is not in triangle, return false
+			//if (!(IsToRightSideOfEdge(hitPoint, triangle.v0, triangle.v1, triangle.normal)
+			//	&& IsToRightSideOfEdge(hitPoint, triangle.v1, triangle.v2, triangle.normal)
+			//	&& IsToRightSideOfEdge(hitPoint, triangle.v2, triangle.v0, triangle.normal)))
+			//{
+			//	return false;
+			//}
+
+			//// If hit records needs to be ignored, just return true
+			//if (ignoreHitRecord) return true;
+
+			//hitRecord.t = t;
+			//hitRecord.origin = hitPoint;
+			//hitRecord.normal = triangle.normal;
+			//hitRecord.materialIndex = triangle.materialIndex;
+			//hitRecord.didHit = true;
+
+			//return true;
 		}
 
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
@@ -170,9 +238,38 @@ namespace dae
 #pragma region TriangeMesh HitTest
 		inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			//todo W5
-			assert(false && "No Implemented Yet!");
-			return false;
+			//todo W5 COMPLETED
+			bool hasHit{false};
+			HitRecord tempRecord{};
+			float closestT{ FLT_MAX };
+
+
+
+			for (int idx{}; idx < mesh.indices.size(); idx += 3)
+			{
+				Triangle triangle{ mesh.transformedPositions[mesh.indices[idx]],
+									mesh.transformedPositions[mesh.indices[idx + 1]],
+									mesh.transformedPositions[mesh.indices[idx + 2]] };
+				triangle.normal = mesh.transformedNormals[idx / 3];
+				triangle.cullMode = mesh.cullMode;
+				triangle.materialIndex = mesh.materialIndex;
+
+				if (HitTest_Triangle(triangle, ray, tempRecord, ignoreHitRecord))
+				{
+					hasHit = true;
+				}
+
+				if (closestT >= tempRecord.t)
+				{
+					closestT = tempRecord.t;
+					if (!ignoreHitRecord)
+					{
+						hitRecord = tempRecord;
+					}
+				}
+		
+			}
+			return hasHit;
 		}
 
 		inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray)
