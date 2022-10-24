@@ -126,7 +126,7 @@ namespace dae
 			ColorRGB GsmithRGB{ Gsmith ,Gsmith ,Gsmith };
 
 			ColorRGB cookTorranceSpecular{ (Frgb * DnRGB * GsmithRGB) / (4 * Vector3::Dot(v, hitRecord.normal) * Vector3::Dot(l, hitRecord.normal)) };
-			
+
 			ColorRGB kd{};
 			if (m_Metalness == 0.f)
 				kd = ColorRGB{ 1,1,1 } - Frgb;

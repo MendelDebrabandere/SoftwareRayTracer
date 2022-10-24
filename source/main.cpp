@@ -46,7 +46,7 @@ int main(int argc, char* args[])
 	const auto pRenderer = new Renderer(pWindow);
 
 	// CHANGE SCENE HERE
-	const auto pScene = new Scene_W4_ReferenceScene();
+	const auto pScene = new Scene_W3();
 	pScene->Initialize();
 
 	//Start loop
