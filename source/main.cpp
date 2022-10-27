@@ -46,7 +46,7 @@ int main(int argc, char* args[])
 	const auto pRenderer = new Renderer(pWindow);
 
 	// CHANGE SCENE HERE
-	const auto pScene = new Scene_W3();
+	const auto pScene = new Scene_W4_ReferenceScene();
 	pScene->Initialize();
 
 	//Start loop
@@ -72,6 +72,8 @@ int main(int argc, char* args[])
 					pRenderer->TogleShadows();
 				else if (e.key.keysym.sym == SDLK_F3)
 					pRenderer->CycleLightingMode();
+				else if (e.key.keysym.sym == SDLK_F6)
+					pTimer->StartBenchmark(10);
 				break;
 
 			}

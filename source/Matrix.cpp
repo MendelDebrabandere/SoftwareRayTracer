@@ -235,7 +235,7 @@ namespace dae {
 			for (int c{ 0 }; c < 4; ++c)
 			{
 				//data[r][c] = Vector4::Dot(copy[r], m_transposed[c]);
-				int sum = 0;
+				float sum = 0;
 				for (int k{}; k < 4; ++k)
 				{
 					sum += copy[r][k] * m[k][c];

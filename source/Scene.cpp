@@ -60,25 +60,24 @@ namespace dae {
 	{
 		//todo W3 COMPLETED
 		
-		HitRecord tempRecord{};
 
 		for (const Sphere& spheres : m_SphereGeometries)
 		{
-			if (dae::GeometryUtils::HitTest_Sphere(spheres, ray, tempRecord, true))
+			if (dae::GeometryUtils::HitTest_Sphere(spheres, ray))
 			{
 				return true;
 			}
 		}
 		for (const Plane& planes : m_PlaneGeometries)
 		{
-			if (dae::GeometryUtils::HitTest_Plane(planes, ray, tempRecord, true))
+			if (dae::GeometryUtils::HitTest_Plane(planes, ray))
 			{
 				return true;
 			}
 		}
 		for (const TriangleMesh& mesh : m_TriangleMeshGeometries)
 		{
-			if (dae::GeometryUtils::HitTest_TriangleMesh(mesh, ray, tempRecord, true))
+			if (dae::GeometryUtils::HitTest_TriangleMesh(mesh, ray))
 			{
 				return true;
 			}
@@ -280,7 +279,7 @@ namespace dae {
 		pMesh->UpdateTransforms();
 
 		pMesh->Scale({ 0.7f, 0.7f, 0.7f });
-		pMesh->Translate({ 0.f, 1.5f, 0.f });
+		pMesh->Translate({ 0.f, 1.f, 0.f });
 
 		pMesh->UpdateTransforms();
 
@@ -376,6 +375,7 @@ namespace dae {
 		for (const auto m : m_Meshes)
 		{
 			m->RotateY(yawAngle);
+			m->UpdateAABB();
 			m->UpdateTransforms();
 		}
 	}
@@ -406,13 +406,14 @@ namespace dae {
 			pMesh->normals,
 			pMesh->indices);
 
-		pMesh->UpdateTransforms();
-
-		//pMesh->Scale({ 0.7f, 0.7f, 0.7f });
 		pMesh->RotateY(float(M_PI));
 		//pMesh->Translate({ 0.f, 1.5f, 0.f });
 
 		pMesh->UpdateTransforms();
+
+		pMesh->UpdateAABB();
+		pMesh->UpdateTransforms();
+
 
 		//auto triangle = Triangle{ { -0.75f, 0.5f, 0.f}, {-0.75f, 2.f, 0.f}, {0.75f, 0.5f, 0.f} };
 		//triangle.materialIndex = matLambert_White;
@@ -436,6 +437,10 @@ namespace dae {
 	{
 		Scene::Update(pTimer);
 
+		const auto yawAngle = (cos(pTimer->GetTotal()) + 1.f) / 2.f * PI_2;
+
+		pMesh->RotateY(yawAngle + M_PI);
+		pMesh->UpdateAABB();
 		pMesh->UpdateTransforms();
 	}
 #pragma endregion
