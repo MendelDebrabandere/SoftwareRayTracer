@@ -67,7 +67,9 @@ namespace dae
 		{
 			//todo: W3 COMPLETED
 			float a{ roughness * roughness };
-			float Dnfloat{ float((a * a) / (float(M_PI) * pow(std::max(Vector3::Dot(n, h),0.f) * std::max(Vector3::Dot(n, h),0.f) * (a * a - 1) + 1,2))) };
+			float powerThing{ std::max(Vector3::Dot(n, h),0.f) * std::max(Vector3::Dot(n, h),0.f) * (a * a - 1) + 1 };
+			powerThing *= powerThing;
+			float Dnfloat{ float((a * a) / (float(M_PI) * powerThing)) };
 			return Dnfloat;
 		}
 

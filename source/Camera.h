@@ -2,6 +2,9 @@
 #include <cassert>
 #include <SDL_keyboard.h>
 #include <SDL_mouse.h>
+#include "SDL.h"
+
+#include <iostream>
 
 #include "Math.h"
 #include "Timer.h"
@@ -91,7 +94,12 @@ namespace dae
 			//Mouse Input
 			int mouseX{}, mouseY{};
 			const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
-			if (mouseState & SDL_BUTTON(3))
+			
+			if (mouseState &  SDL_BUTTON_RMASK && mouseState & SDL_BUTTON_LMASK)
+			{
+				this->origin += movementSpeed * pTimer->GetElapsed() * Vector3{0,1,0} * mouseY;
+			}
+			else if (mouseState & SDL_BUTTON_RMASK)
 			{
 				totalPitch -= rotationSpeed * mouseX;
 				totalYaw -= rotationSpeed * mouseY;
@@ -106,6 +114,11 @@ namespace dae
 						totalYaw = float(M_PI) / 2.001f;
 					}
 				}
+			}
+			else if (mouseState & SDL_BUTTON_LMASK)
+			{
+				totalPitch -= rotationSpeed * mouseX;
+				this->origin -= movementSpeed * pTimer->GetElapsed() * this->forward * mouseY;
 			}
 
 			Matrix finalRotation{ Matrix::CreateRotation(totalPitch, totalYaw, 0) };
