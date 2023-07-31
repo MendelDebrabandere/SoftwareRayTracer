@@ -283,7 +283,7 @@ namespace dae
 	namespace LightUtils
 	{
 		//Direction from target to light
-		inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
+		inline Vector3 GetDirectionToLight(const Light& /*light*/, const Vector3 /*origin*/)
 		{
 			//todo W3 (NOT USED)
 			assert(false && "No Implemented Yet!");
@@ -357,16 +357,7 @@ namespace dae
 				Vector3 edgeV0V2 = positions[i2] - positions[i0];
 				Vector3 normal = Vector3::Cross(edgeV0V1, edgeV0V2);
 
-				if(isnan(normal.x))
-				{
-					int k = 0;
-				}
-
 				normal.Normalize();
-				if (isnan(normal.x))
-				{
-					int k = 0;
-				}
 
 				normals.push_back(normal);
 			}

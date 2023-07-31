@@ -85,7 +85,7 @@ void Renderer::Render(Scene* pScene) const
 		});
 
 #else
-	//Syncronioyus exec
+	//Synchronous exec
 	for (uint32_t i{ 0 }; i < numPixels; ++i)
 	{
 		RenderPixel(pScene, i, FOV, aspectRatio, camera, lights, materials);
@@ -99,7 +99,7 @@ void Renderer::Render(Scene* pScene) const
 	SDL_UpdateWindowSurface(m_pWindow);
 }
 
-void dae::Renderer::RenderPixel(Scene* pScene,
+void Renderer::RenderPixel(Scene* pScene,
 	uint32_t pixelIndex,
 	float fov,
 	float aspectRatio,

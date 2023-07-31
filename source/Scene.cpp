@@ -439,7 +439,7 @@ namespace dae {
 
 		const auto yawAngle = (cos(pTimer->GetTotal()) + 1.f) / 2.f * PI_2;
 
-		pMesh->RotateY(yawAngle + M_PI);
+		pMesh->RotateY(yawAngle + static_cast<float>(M_PI));
 		pMesh->UpdateAABB();
 		pMesh->UpdateTransforms();
 	}

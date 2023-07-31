@@ -59,7 +59,7 @@ namespace dae
 		{
 			//todo: W2 COMPLETED
 
-			const float deltaTime = pTimer->GetElapsed();
+			//const float deltaTime = pTimer->GetElapsed();
 
 			const float movementSpeed = 5.f;
 			const float rotationSpeed = 0.003f;
@@ -95,11 +95,11 @@ namespace dae
 			int mouseX{}, mouseY{};
 			const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
 			
-			if (mouseState &  SDL_BUTTON_RMASK && mouseState & SDL_BUTTON_LMASK)
+/*			if (mouseState &  SDL_BUTTON_RMASK && mouseState & SDL_BUTTON_LMASK)
 			{
-				this->origin += movementSpeed * pTimer->GetElapsed() * Vector3{0,1,0} * mouseY;
+				this->origin -= movementSpeed / 15.f * pTimer->GetElapsed() * Vector3{0,1,0} * static_cast<float>(mouseY);
 			}
-			else if (mouseState & SDL_BUTTON_RMASK)
+			else */if (mouseState & SDL_BUTTON_RMASK)
 			{
 				totalPitch -= rotationSpeed * mouseX;
 				totalYaw -= rotationSpeed * mouseY;
@@ -115,11 +115,11 @@ namespace dae
 					}
 				}
 			}
-			else if (mouseState & SDL_BUTTON_LMASK)
-			{
-				totalPitch -= rotationSpeed * mouseX;
-				this->origin -= movementSpeed * pTimer->GetElapsed() * this->forward * mouseY;
-			}
+			//else if (mouseState & SDL_BUTTON_LMASK)
+			//{
+			//	totalPitch -= rotationSpeed * mouseX;
+			//	this->origin -= movementSpeed / 15.f * pTimer->GetElapsed() * this->forward * static_cast<float>(mouseY);
+			//}
 
 			Matrix finalRotation{ Matrix::CreateRotation(totalPitch, totalYaw, 0) };
 

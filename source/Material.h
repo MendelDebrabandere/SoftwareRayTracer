@@ -38,7 +38,7 @@ namespace dae
 		{
 		}
 
-		ColorRGB Shade(const HitRecord& hitRecord, const Vector3& l, const Vector3& v) override
+		ColorRGB Shade(const HitRecord& /*hitRecord*/, const Vector3& /*l*/, const Vector3& /*v*/) override
 		{
 			return m_Color;
 		}
@@ -57,7 +57,7 @@ namespace dae
 		Material_Lambert(const ColorRGB& diffuseColor, float diffuseReflectance) :
 			m_DiffuseColor(diffuseColor), m_DiffuseReflectance(diffuseReflectance){}
 
-		ColorRGB Shade(const HitRecord& hitRecord = {}, const Vector3& l = {}, const Vector3& v = {}) override
+		ColorRGB Shade(const HitRecord& /*hitRecord*/ = {}, const Vector3& /*l*/ = {}, const Vector3& /*v*/ = {}) override
 		{
 			//todo: W3 COMPLETED
 			return BRDF::Lambert(m_DiffuseReflectance, m_DiffuseColor);
