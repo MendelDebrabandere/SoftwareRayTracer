@@ -86,68 +86,7 @@ namespace dae
 		//TRIANGLE HIT-TESTS
 		inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 		{
-			////todo W5 FINISHED
-
-			//// Normal VS Ray-Direction Check (Perpendicular?)
-			//float dotNormalRaydir{ Vector3::Dot(triangle.normal, ray.direction) };
-
-			//if (dotNormalRaydir == 0)
-			//{
-			//	return false;
-			//}
-
-			//// CullModeCheck
-			//if (triangle.cullMode != TriangleCullMode::NoCulling)
-			//{
-			//	if (dotNormalRaydir > 0)
-			//	{
-			//		if (triangle.cullMode == TriangleCullMode::BackFaceCulling)
-			//			return false;
-			//	}
-			//	else
-			//	{
-			//		if (triangle.cullMode == TriangleCullMode::FrontFaceCulling)
-			//			return false;
-			//	}
-			//}
-
-			//// Ray-Plane test(planedefinedbyTriangle) + T range check
-			//Plane plane{ triangle.v0, triangle.normal };
-			//HitRecord tempHitRecord{};
-			//HitTest_Plane(plane, ray, tempHitRecord);
-
-			//if (tempHitRecord.t > ray.max || tempHitRecord.t < ray.min)
-			//	return false;
-
-			//// CheckifhitpointisinsidetheTriangle
-			//const Vector3 point{ tempHitRecord.origin };
-
-			//Vector3 edgeA{ (triangle.v1 - triangle.v0) };
-			//Vector3	pointToSideA{ point - triangle.v0 };
-			//if (Vector3::Dot(triangle.normal, Vector3::Cross(edgeA, pointToSideA)) < 0)
-			//	return false;
-
-			//Vector3 edgeB{ (triangle.v2 - triangle.v1) };
-			//Vector3	pointToSideB{ point - triangle.v1 };
-			//if (Vector3::Dot(triangle.normal, Vector3::Cross(edgeB, pointToSideB)) < 0)
-			//	return false;
-
-			//Vector3 edgeC{ (triangle.v0 - triangle.v2) };
-			//Vector3	pointToSideC{ point - triangle.v2 };
-			//if (Vector3::Dot(triangle.normal, Vector3::Cross(edgeC, pointToSideC)) < 0)
-			//	return false;
-
-
-			//// Fill-in HitRecord(if required)
-			//if (!ignoreHitRecord)
-			//{
-			//	hitRecord.didHit = true;
-			//	hitRecord.materialIndex = triangle.materialIndex;
-			//	hitRecord.normal = triangle.normal;
-			//	hitRecord.origin = point;
-			//	hitRecord.t = tempHitRecord.t;
-			//}
-			//return true;
+			//todo W5 FINISHED
 
 			// CullModeCheck
 			if (triangle.cullMode != TriangleCullMode::NoCulling)
@@ -167,25 +106,31 @@ namespace dae
 			const float EPSILON = 0.0000001f;
 			Vector3 edge1, edge2, h, s, q;
 			float a, f, u, v;
+
+
 			edge1 = triangle.v1 - triangle.v0;
 			edge2 = triangle.v2 - triangle.v0;
 			h = Vector3::Cross(ray.direction, edge2);
 			a = Vector3::Dot(edge1, h);
 			if (a > -EPSILON && a < EPSILON)
 				return false;    // This ray is parallel to this triangle.
+
 			f = 1.0f / a;
 			s = ray.origin - triangle.v0;
 			u = f * Vector3::Dot(s, h);
 			if (u < 0.0f || u > 1.0f)
 				return false;
+
 			q = Vector3::Cross(s, edge1);
 			v = f * Vector3::Dot(ray.direction, q);
 			if (v < 0.0f || u + v > 1.0f)
 				return false;
+
 			// At this stage we can compute t to find out where the intersection point is on the line.
 			float t = f * Vector3::Dot(edge2, q);
 			if (t > ray.max || t < ray.min)
 				return false;
+
 			if (!ignoreHitRecord)
 			{
 				hitRecord.didHit = true;
