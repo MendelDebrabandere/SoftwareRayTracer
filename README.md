@@ -9,7 +9,7 @@ F3: Cycle lighting mode (Combined -> ObservedArea -> Radiance -> BRDF) \
 F6: Start fps benchmark of 10 frames \
 \
 WASD, EQ: Full 3D movement\
-Right mouse button: Pan camera\
+Right mouse button: Pan camera
 
 ## FPS
 ![image](https://github.com/MendelDebrabandere/SoftwareRayTracer/assets/95921047/a7a7f336-a36b-4349-b085-924fe3ef3b11)
