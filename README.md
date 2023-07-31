@@ -1,4 +1,7 @@
 # SoftwareRayTracer
+
+Github repo: https://github.com/MendelDebrabandere/SoftwareRayTracer
+
 A software ray tracer made fully in C++ that uses multithreading
 
 ![raytracer](https://github.com/MendelDebrabandere/SoftwareRayTracer/assets/95921047/8067c9d1-d732-4db1-86b8-6bef7d9d9516)
