@@ -23,7 +23,7 @@ namespace dae
 		return ((1 - factor) * a) + (factor * b);
 	}
 
-	inline bool AreEqual(float a, float b, float epsilon = FLT_EPSILON)
+	inline bool AreEqual(float a, float b, float epsilon = 0x0.000002p0)
 	{
 		return abs(a - b) < epsilon;
 	}
